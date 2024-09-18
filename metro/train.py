@@ -22,7 +22,15 @@ flags.DEFINE_bool('infer', False, 'Train or Infer.')
 flags.DEFINE_bool('visualize', True, 'visualize plan.')
 flags.DEFINE_enum('agent', 'rl-gnn3', ['rl','rl-gnn1','rl-gnn2','rl-gnn3','greedy','random'],'Agent type.')
 flags.DEFINE_integer('num_threads', 10, 'The number of threads for sampling trajectories.')
-flags.DEFINE_bool('use_nvidia_gpu', True, 'Whether to use Nvidia GPU for acceleration.')
+
+import torch
+
+# Check for GPU availability
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f'Using device: {device}')
+
+flags.DEFINE_bool('use_nvidia_gpu', torch.cuda.is_available(), 'Whether to use Nvidia GPU for acceleration.')
+
 flags.DEFINE_integer('gpu_index', 0,'GPU ID.')
 flags.DEFINE_integer('global_seed', 1, 'Used in env and weight initialization, does not impact action sampling.')
 flags.DEFINE_string('iteration', '0', 'The start iteration. Can be number or best. If not 0, the agent will load from '
